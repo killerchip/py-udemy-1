@@ -170,3 +170,119 @@ random_choice = random.choice(["apple", "banana", "cherry"])  # Randomly selects
 print ("Random choice from the list:", random_choice)
 random_sample = random.sample([1, 2, 3, 4, 5], 3)  # Randomly selects 3 unique items from the list
 print ("Random sample of 3 unique items from the list:", random_sample)
+
+# Loops
+# for loop
+for i in range(5,2,10):
+    print ("For loop iteration:", i)
+# iterables
+my_list = [1, 2, 3, 4, 5]
+for item in my_list:
+    print ("Iterating over list item:", item)
+my_string = "Hello"
+for char in my_string:
+    print ("Iterating over string character:", char)
+
+# while loop
+count = 0
+while count < 5:
+    print ("While loop count:", count)
+    count += 1
+
+# break and continue
+for i in range(10):
+    if i == 5:
+        break  # Exit the loop when i is 5
+    if i % 2 == 0:
+        continue  # Skip even numbers
+    print ("Current value of i:", i)
+
+# FUNCTIONS
+def greet(name):
+    return f"Hello, {name}!"
+print (greet("Alice"))  # Hello, Alice!
+def add(a, b):
+    return a + b
+print (add(5, 3))  # 8
+
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n - 1)
+print (factorial(5))  # 120
+# Default parameters
+def greet(name="World"):
+    return f"Hello, {name}!"
+print (greet())  # Hello, World!
+# order of default parameters
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+print (greet("Alice"))  # Hello, Alice!
+print (greet("Alice", "Hi"))  # Hi, Alice!
+# keyword arguments
+print (greet(greeting="Hi", name="Bob"))  # Hi, Bob!
+# Lambda functions
+square = lambda x: x ** 2 # explanation: lambda functions are anonymous functions defined using the lambda keyword, they can take any number of arguments but can only have one expression
+print (square(5))  # 25
+
+# Complex lamda function with multiple optional arguments and complex body
+complex_lambda = lambda x, y=10: (x ** 2 + y ** 2) ** 0.5  # explanation: this lambda function calculates the distance from the origin to the point (x, y) in a 2D space, with y having a default value of 10
+print (complex_lambda(3))  # 10.44...
+print (complex_lambda(3, 4))  # 5.0
+
+# SCOPES: LEGB = Local, Enclosing, Global, Built-in
+# Global: variables defined at the top level of a script or module
+# Local: variables defined within a function
+# Enclosing: variables defined in the local scope of any and all enclosing functions
+# Built-in: names preassigned in the built-in names module
+# Scope prcendence: Local > Enclosing > Global > Built-in
+
+# Global keyword: used to declare that a variable inside a function is global (i.e., it should not be treated as a local variable)
+# Global keyword example:
+counter = 0  # Global variable
+def increment():
+    global counter  # Declare that we are using the global variable 'counter'
+    counter += 1  # Increment the global variable
+increment()
+print ("Counter after incrementing:", counter)  # Counter after incrementing: 1
+
+# LISTS
+
+# Creating a list
+my_list = [1, 2, 3, 4, 5]
+print ("My list:", my_list)  # My list: [1, 2, 3, 4, 5]
+
+# list keyword
+my_list = list([1, 2, 3, 4, 5])
+print ("My list using list keyword:", my_list)  # My list using list keyword:
+
+# List indexing
+first_item = my_list[0]  # 1
+last_item = my_list[-1]  # 5
+print ("First item:", first_item)  # First item: 1
+print ("Last item:", last_item)  # Last item: 5
+
+# List length
+list_length = len(my_list)  # 5
+
+# List methods 
+my_list.append(6)  # [1, 2, 3, 4, 5, 6]
+my_list.insert(0, 0)  # [0, 1, 2, 3, 4, 5, 6]
+my_list.remove(3)
+print ("List after modifications:", my_list)  # List after modifications: [0, 1, 2, 4, 5, 6]
+my_list.extend([7, 8, 9])  # [0, 1, 2, 4, 5, 6, 7, 8, 9]
+
+# List slicing
+sublist = my_list[2:5]  # [2, 4, 5]
+print ("Sublist from index 2 to 4:", sublist)  # Sublist from index 2 to 4: [2, 4, 5]
+reverse_list = my_list[::-1]  # [9, 8, 7, 6, 5, 4, 2, 1, 0]: explanation: this slice reverses the list by using a step of -1
+# List[start:stop:step]
+
+# List deletion methods
+del my_list[0]  # Deletes the first item (0)
+print ("List after deletion:", my_list)  # List after deletion: [1, 2, 4, 5, 6, 7, 8, 9
+my_list.pop()  # Removes and returns the last item (9)
+print ("List after popping the last item:", my_list)  # List after popping the last
+my_list.pop(2)  # Removes and returns the item at index 2 (4)
+print ("List after popping item at index 2:", my_list)  # List after popping
