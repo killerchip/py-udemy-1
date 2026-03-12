@@ -539,6 +539,7 @@ def outer():
 
 # --- Decorators ---
 def my_decorator(func):
+    @wraps(func)    # preserves wrapped func metadata
     def wrapper(*args, **kwargs):
         print("Before")
         result = func(*args, **kwargs)
@@ -546,9 +547,28 @@ def my_decorator(func):
         return result
     return wrapper
 
+# --- Decorators with arguments ---
 @my_decorator
 def say_hello():
     print("Hello!")
+
+def repeat(n):                 # outer: receives decorator argument
+    def decorator(func):       # middle: receives the function
+        @wraps(func)
+        def wrapper(*args, **kwargs):  # inner: the actual wrapper
+            for _ in range(n):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@repeat(3)
+def say_hi():
+    print("Hi!")
+
+say_hi()
+# Hi!
+# Hi!
+# Hi!
 
 # =============================================================================
 # 13. SCOPE & NAMESPACES
