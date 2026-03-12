@@ -339,6 +339,17 @@ squares = {x: x**2 for x in range(5)}
 
 filtered = {k: v for k, v in d.items() if v > 10}
 
+# TERNARIES
+numbers = [-2, -1, 1, 2, 3]
+
+# Ternary on the VALUE
+{x: "even" if x % 2 == 0 else "odd" for x in numbers if x > 0}
+# {1: 'odd', 2: 'even', 3: 'odd'}
+
+# Ternary on the KEY
+{("even" if x % 2 == 0 else "odd"): x for x in numbers if x > 0}
+# note: keys would overwrite each other here — just illustrating syntax
+
 # --- Merging (Python 3.9+) ---
 merged = {"a": 1} | {"b": 2}   # {'a': 1, 'b': 2}
 
