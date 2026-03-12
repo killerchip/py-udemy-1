@@ -270,6 +270,11 @@ evens = [x for x in range(20) if x % 2 == 0] # [0, 2, 4, 6, 8, 10, 12, 14, 16, 1
 matrix = [[i * j for j in range(3)] for i in range(3)]
 flat = [x for row in matrix for x in row]  # flatten
 
+# [ternary_expression or mapper for item in iterable if filter_condition]
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#  transforms every                         drops items before
+#  item that passes                         transformation
+
 # --- Unpacking ---
 first, *rest = [1, 2, 3, 4]          # first=1, rest=[2, 3, 4]
 first, *middle, last = [1, 2, 3, 4]  # first=1, middle=[2, 3], last=4
