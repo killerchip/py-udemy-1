@@ -852,3 +852,70 @@ assert 2 + 2 == 4, "Math is broken"
 with open("file.txt") as f:
     data = f.read()
 # File is automatically closed after the block
+
+# =============================================================================
+# 21. GENERATORS
+# =============================================================================
+
+# Generators produce values one at a time using `yield` instead of `return`
+# They are memory-efficient: only one value is held in memory at a time
+
+# --- Basic generator function ---
+def count_up(n):
+    for i in range(n):
+        yield i             # pauses here, gives value, resumes on next call
+
+gen = count_up(3)
+next(gen)                   # 0
+next(gen)                   # 1
+next(gen)                   # 2
+# next(gen)                 # StopIteration (exhausted)
+
+# --- Typical usage: just loop over it ---
+for val in count_up(5):
+    print(val)              # 0, 1, 2, 3, 4
+
+# --- Generator expression (lazy list comprehension) ---
+squares_list = [x**2 for x in range(5)]    # list: builds everything now
+squares_gen  = (x**2 for x in range(5))    # generator: computes on demand
+
+list(squares_gen)           # [0, 1, 4, 9, 16] (forces full evaluation)
+sum(x**2 for x in range(5)) # 30 (no intermediate list needed)
+
+# --- Generators are EXHAUSTED after one pass ---
+gen = (x**2 for x in range(5))
+list(gen)                   # [0, 1, 4, 9, 16]
+list(gen)                   # [] (already exhausted, cannot reuse)
+
+# --- yield from: delegate to another iterable ---
+def chain(*iterables):
+    for it in iterables:
+        yield from it       # yields each item from it one by one
+
+list(chain([1, 2], [3, 4], [5]))  # [1, 2, 3, 4, 5]
+
+# --- Infinite sequences (impossible with lists) ---
+def integers_from(n):
+    while True:
+        yield n
+        n += 1
+
+gen = integers_from(0)
+next(gen)                   # 0
+next(gen)                   # 1 (runs forever, only computes when asked)
+
+# --- Practical example: reading a large file ---
+def read_large_file(path):
+    with open(path) as f:
+        for line in f:
+            yield line.strip()  # one line at a time, not the whole file
+
+# for line in read_large_file("huge.txt"):
+#     process(line)
+
+# --- List vs Generator comparison ---
+# list:      [x**2 for x in range(n)]   -> all n items in memory at once
+# generator: (x**2 for x in range(n))   -> one item in memory at a time
+
+# Use a list when:   you need to iterate multiple times, index, or get len()
+# Use a generator when: the sequence is large, infinite, or used only once
