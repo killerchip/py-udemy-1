@@ -624,18 +624,23 @@ sum(x**2 for x in range(5))                 # 30
 # =============================================================================
 
 # --- try / except / else / finally ---
-try:
-    result = 10 / 0
-except ZeroDivisionError:
+try:                                    # code that might raise an exception goes here
+    result = 10 / 0                     # this raises ZeroDivisionError
+except ZeroDivisionError:              # catches ONLY ZeroDivisionError
     print("Cannot divide by zero")
-except (TypeError, ValueError) as e:
-    print(f"Error: {e}")
-except Exception as e:
-    print(f"Unexpected error: {e}")
+except (TypeError, ValueError) as e:   # catches EITHER TypeError or ValueError
+    print(f"Error: {e}")               # `e` holds the exception message
+except Exception as e:                 # catches ANY other exception (catch-all)
+    print(f"Unexpected error: {e}")    # put this last, it's the most broad
 else:
-    print("No exception occurred")  # runs only if no exception
+    print("No exception occurred")     # runs ONLY if try block succeeded (no exception)
 finally:
-    print("Always runs")            # cleanup code
+    print("Always runs")               # ALWAYS runs, even if exception was raised
+                                        # use for cleanup: closing files, DB connections, etc.
+
+# Execution flow:
+# exception raised   -> try -> except -> finally
+# no exception       -> try -> else   -> finally
 
 # --- Raising exceptions ---
 def validate_age(age):
