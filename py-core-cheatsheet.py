@@ -922,5 +922,206 @@ def read_large_file(path):
 # list:      [x**2 for x in range(n)]   -> all n items in memory at once
 # generator: (x**2 for x in range(n))   -> one item in memory at a time
 
+# =============================================================================
+# PYTHON MODULES, IMPORTS, PACKAGES, VENV & UV CHEATSHEET
+# =============================================================================
+
+# =============================================================================
+# 21. MODULES & IMPORTS
+# =============================================================================
+
+# A module is simply a .py file. Importing it makes its contents available.
+
+# --- Four import styles ---
+import math                         # 1. import whole module (safest, no collisions)
+math.sqrt(16)                       # access via dot notation: 4.0
+
+from math import sqrt               # 2. import specific name (convenient)
+sqrt(16)                            # use directly, no prefix needed
+
+from math import sqrt as sq         # 3. import with alias
+sq(16)                              # 4.0
+
+import numpy as np                  # 4. module alias (community convention)
+np.array([1, 2, 3])                 # np, pd, plt are widely used aliases
+
+# --- Importing multiple names ---
+from math import sqrt, pi, floor    # comma-separated
+
+# --- Wildcard import (avoid in production) ---
+from math import *                  # imports everything — can cause name collisions
+
+# --- Common standard library modules ---
+import os           # operating system interface (paths, env vars, processes)
+import sys          # interpreter internals (sys.argv, sys.path, sys.exit)
+import json         # JSON encoding/decoding
+import re           # regular expressions
+import datetime     # date and time handling
+import random       # random number generation
+import pathlib      # object-oriented filesystem paths (preferred over os.path)
+import collections  # specialized containers: defaultdict, Counter, deque
+import itertools    # iterator building blocks: chain, product, combinations
+import functools    # higher-order functions: reduce, lru_cache, partial
+
+# =============================================================================
+# 22. PACKAGES
+# =============================================================================
+
+# A package is a folder containing an __init__.py file.
+# It lets you organize related modules together.
+
+# --- Typical structure ---
+# my_project/
+# ├── main.py
+# └── utils/
+#     ├── __init__.py        <- marks folder as a package (can be empty)
+#     ├── tools.py
+#     └── math_helpers.py
+
+# --- Importing from a package ---
+from utils.tools import greet           # import specific function
+from utils import math_helpers          # import whole module from package
+import utils.tools                      # import with full path
+
+# --- __init__.py as a "front door" ---
+# utils/__init__.py can expose selected names for cleaner imports:
+#
+#   from .tools import greet
+#   from .math_helpers import add
+#
+# Then in main.py:
+from utils import greet, add            # clean, no need to know internal structure
+
+# --- Relative imports (used inside packages) ---
+from .tools import greet                # same package (one dot = current folder)
+from ..other import something           # parent package (two dots = one level up)
+
+# --- Nested packages ---
+# services/
+# ├── __init__.py
+# ├── auth/
+# │   ├── __init__.py
+# │   └── login.py
+# └── data/
+#     ├── __init__.py
+#     └── parser.py
+
+from services.auth.login import authenticate
+from services.data.parser import parse_csv
+
+# --- Absolute vs relative (best practice) ---
+# Prefer absolute imports for clarity, use relative inside packages
+from utils.tools import greet           # absolute — always clear, always works
+from .tools import greet                # relative — only works inside a package
+
+# =============================================================================
+# 23. VIRTUAL ENVIRONMENTS (venv)
+# =============================================================================
+
+# A virtual environment is an isolated Python environment with its own
+# site-packages folder. Prevents dependency conflicts between projects.
+
+# --- Creating and activating ---
+# python -m venv venv              # create a venv in a folder named "venv"
+# source venv/bin/activate         # activate (Mac/Linux)
+# venv\Scripts\activate            # activate (Windows)
+# deactivate                       # exit the virtual environment
+
+# --- Installing packages inside venv ---
+# pip install requests             # installs only into this project's venv
+# pip install requests==2.28.0     # specific version
+# pip uninstall requests           # remove package
+# pip list                         # list installed packages
+# pip show requests                # details about a package
+
+# --- Sharing dependencies ---
+# pip freeze > requirements.txt    # save exact versions to file
+# pip install -r requirements.txt  # recreate environment from file
+
+# requirements.txt looks like:
+# requests==2.31.0
+# numpy==1.24.0
+# pandas==2.0.1
+
+# --- Project structure conventions ---
+# my_project/
+# ├── venv/               <- NEVER commit to git (add to .gitignore)
+# ├── main.py
+# ├── utils/
+# └── requirements.txt    <- DO commit to git
+
+# =============================================================================
+# 24. UV — MODERN PACKAGE MANAGER
+# =============================================================================
+
+# uv is a fast, all-in-one Python package manager written in Rust.
+# Replaces: pip, venv, pyenv, poetry — 10-100x faster than pip.
+# Developed by Astral (creators of Ruff). Released February 2024.
+
+# --- Installation ---
+# Mac/Linux:  curl -LsSf https://astral.sh/uv/install.sh | sh
+# Windows:    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+# Via pip:    pip install uv
+
+# --- Starting a new project ---
+# uv init my_project               # scaffold a full project
+# cd my_project
+#
+# Creates:
+# my_project/
+# ├── .venv/                <- virtual env, created automatically
+# ├── pyproject.toml        <- replaces requirements.txt
+# ├── uv.lock               <- lockfile (exact versions, auto-generated)
+# └── main.py
+
+# --- Managing packages ---
+# uv add requests                  # install a package
+# uv add requests==2.28.0          # specific version
+# uv add "requests>=2.28,<3.0"     # version range
+# uv remove requests               # uninstall
+# uv sync                          # install all deps from lockfile
+
+# --- Running code (no need to activate venv!) ---
+# uv run main.py                   # runs with the project's venv automatically
+# uv run pytest                    # run any tool in the project env
+
+# --- Python version management ---
+# uv python install 3.12           # install a Python version
+# uv python install 3.12 3.13      # install multiple versions
+# uv python pin 3.12               # pin this project to Python 3.12
+# uv run --python 3.11 main.py     # run with a specific version
+
+# --- pip-compatible interface (easy migration) ---
+# uv pip install requests          # same as pip install
+# uv pip install -r requirements.txt
+# uv pip uninstall requests
+# uv pip list
+# uv pip freeze
+
+# --- pyproject.toml (managed automatically by uv add/remove) ---
+# [project]
+# name = "my_project"
+# version = "0.1.0"
+# requires-python = ">=3.12"
+# dependencies = [
+#     "requests>=2.28.0",
+#     "numpy>=1.24.0",
+# ]
+
+# =============================================================================
+# QUICK REFERENCE: pip + venv  vs  uv
+# =============================================================================
+
+# Task                   pip + venv                        uv
+# ---------------------  --------------------------------  --------------------
+# Create environment     python -m venv venv               automatic
+# Activate               source venv/bin/activate          not needed
+# Install package        pip install requests              uv add requests
+# Uninstall              pip uninstall requests            uv remove requests
+# Run script             python main.py                    uv run main.py
+# Save dependencies      pip freeze > requirements.txt     automatic (uv.lock)
+# Restore dependencies   pip install -r requirements.txt   uv sync
+# Install Python ver.    (use pyenv separately)            uv python install 3.12
+# Pin Python ver.        (use pyenv separately)            uv python pin 3.12
 # Use a list when:   you need to iterate multiple times, index, or get len()
 # Use a generator when: the sequence is large, infinite, or used only once
